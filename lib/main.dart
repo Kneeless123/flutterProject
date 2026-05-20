@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'widgets/mywidget.dart';
+import 'widgets/fragmentplaceholder.dart';
 
-void main() {  
+void main() {
   runApp(const MyApp());
 }
 
@@ -10,13 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Hostel Complaint",
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const ComplaintScreen() ,
+      home: FragmentPlaceholder(),
     );
   }
 }
