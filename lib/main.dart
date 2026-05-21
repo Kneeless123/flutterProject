@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
-import 'widgets/fragmentplaceholder.dart';
+import 'screens/dashboard_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const HostelComplaintApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HostelComplaintApp extends StatelessWidget {
+  const HostelComplaintApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: FragmentPlaceholder(),
+      title: 'Hostel Complain System',
+      theme: ThemeData(
+        primaryColor: const Color(0xFF00796B),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF147A73),
+          secondary: const Color(0xFF147A73),
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+      ),
+      home: const DashboardScreen(),
     );
   }
 }
-
-//hello 
