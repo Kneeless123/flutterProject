@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // <-- Imported SharedPreferences
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/complaint.dart';
 import '../widgets/complaint_card.dart';
 import 'register_complaint_screen.dart';
@@ -19,22 +19,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _loadComplaints(); // Load data when app starts
+    _loadComplaints(); 
   }
 
-  // --- LOAD SAVED DATA ---
+  // --- FIX 1: Smarter Loading ---
   Future<void> _loadComplaints() async {
     final prefs = await SharedPreferences.getInstance();
     final List<String>? complaintsJson = prefs.getStringList('saved_complaints');
 
-    if (complaintsJson != null && complaintsJson.isNotEmpty) {
-      // Convert JSON strings back to Complaint objects
+    // If it is NOT NULL, it means we have saved data before (even if the list is empty because you deleted everything)
+    if (complaintsJson != null) {
       setState(() {
         complaints = complaintsJson.map((jsonStr) => Complaint.fromJson(jsonStr)).toList();
         _isLoading = false;
       });
     } else {
-      // First time running app: Load dummy data and save it
+      // First time running app EVER: Load dummy data
       setState(() {
         complaints = _getDefaultComplaints();
         _isLoading = false;
@@ -43,28 +43,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  // --- SAVE CURRENT DATA ---
   Future<void> _saveComplaints() async {
     final prefs = await SharedPreferences.getInstance();
-    // Convert Complaint objects to JSON strings
     final List<String> complaintsJson = complaints.map((c) => c.toJson()).toList();
     await prefs.setStringList('saved_complaints', complaintsJson);
   }
 
-  // Dummy data for first-time use
   List<Complaint> _getDefaultComplaints() {
     return [
       Complaint(
         id: '1', room: '302', block: 'Block A',
         title: 'AC leaking water',
         description: 'Water dripping from unit since last night.',
-        category: 'Electrical/Plumbing', timeAgo: '2 hours ago', status: 'Pending',
+        category: 'Electrical', timeAgo: '2 hours ago', status: 'Pending',
       ),
       Complaint(
         id: '2', room: 'Geyser', block: 'Block B',
         title: 'Geyser not heating',
         description: 'Geyser B: Geyser not heating. This is heating from last night.',
-        category: 'Electrical/Plumbing', timeAgo: '2 hours ago', status: 'In Progress',
+        category: 'Electrical', timeAgo: '2 hours ago', status: 'In Progress',
       ),
     ];
   }
@@ -91,18 +88,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   );
                   
+                  // If the user hit delete, remove it from the list
                   if (result == 'delete') {
                     setState(() {
                       complaints.removeAt(index);
                     });
-                    await _saveComplaints(); // SAVE AFTER DELETE
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Deleted'), backgroundColor: Color(0xFFD32F2F)),
                     );
-                  } else if (result == 'refresh') {
-                    setState(() {}); 
-                    await _saveComplaints(); // SAVE AFTER EDIT/STATUS UPDATE
                   }
+
+                  // --- FIX 2: ALWAYS REFRESH AND SAVE ---
+                  // No matter if you edited the description, changed status, or hit the back button...
+                  // This ensures the newest changes are immediately saved to your browser/phone memory!
+                  setState(() {}); 
+                  await _saveComplaints(); 
                 },
                 child: ComplaintCard(
                   key: ValueKey('${complaints[index].status}_${complaints[index].description}'),
@@ -124,7 +124,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             setState(() {
               complaints.insert(0, newComplaint);
             });
-            await _saveComplaints(); // SAVE AFTER ADDING NEW
+            await _saveComplaints(); // Save immediately after adding
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Registered!'), backgroundColor: Color(0xFF147A73)),
             );
