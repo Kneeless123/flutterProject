@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/splash.dart';
 import 'screens/dashboard_screen.dart';
 
 void main() {
@@ -21,7 +22,7 @@ class HostelComplaintApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFFF5F5F5),
       ),
-      home: const DashboardScreen(),
+      home: const MyApp(),
     );
   }
 }

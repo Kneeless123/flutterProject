@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/screens/dashboard_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +33,13 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+     Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const DashboardScreen()),
+      );
+    });
+  
     _controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -58,12 +66,12 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 100,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.blue.shade100,
+                  color:  const Color(0xFF147A73),
                 ),
                 child: Icon(
                   Icons.warning_rounded,
                   size: 60,
-                  color: Colors.blue.shade700,
+                  color: const Color(0xFF147A73),
                 ),
               ),
               const SizedBox(height: 30),
@@ -84,12 +92,12 @@ class _SplashScreenState extends State<SplashScreen>
                   height: 50,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.blue, width: 4),
+                    border: Border.all(color: const Color(0xFF147A73), width: 4),
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(4.0),
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      valueColor: AlwaysStoppedAnimation<Color>( const Color(0xFF147A73)),
                       strokeWidth: 3,
                     ),
                   ),
